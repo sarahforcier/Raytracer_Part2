@@ -22,8 +22,11 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
             }
             glm::vec3 I = glm::normalize(r.direction);
             glm::vec3 N = glm::normalize(inter.normal);
-            if (glm::dot(I,N)>0.f) N = -N;
-
+            if (glm::dot(I,N)>0.f) {
+                N = -N;
+                in = inter.object_hit->material->refract_idx_out;
+                out = inter.object_hit->material->refract_idx_in;
+            }
             float cosThetaI = glm::dot(-I,N);
             float sin2ThetaI = std::max(0.f, 1.f - cosThetaI * cosThetaI);
             float sin2ThetaT = (out/in) * (out/in) * sin2ThetaI;
@@ -34,9 +37,6 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
             // refraction
             glm::vec3 rfa = glm::refract(I, N, out/in);
             Ray refa = Ray(inter.point - 0.001f * N, rfa);
-            // flip in and out
-            inter.object_hit->material->refract_idx_in = out;
-            inter.object_hit->material->refract_idx_out = in;
             refract_color = bcolor * TraceRay(refa, depth - 1);
 
             // total internal reflection or reflection
@@ -46,8 +46,6 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
                 reflect_color = bcolor * TraceRay(refe, depth - 1);
                 if (sin2ThetaT > 1.f) {
                     refract_color = reflect_color;
-                    inter.object_hit->material->refract_idx_in = out;
-                    inter.object_hit->material->refract_idx_out = in;
                 }
             }
             color = glm::mix(refract_color, reflect_color, inter.object_hit->material->reflectivity);
