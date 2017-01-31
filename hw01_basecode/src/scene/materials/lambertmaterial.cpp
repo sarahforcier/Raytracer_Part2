@@ -6,9 +6,10 @@ LambertMaterial::LambertMaterial():Material()
 LambertMaterial::LambertMaterial(const glm::vec3 &color):Material(color)
 {}
 
+// outgoing: eye, incoming: light
 glm::vec3 LambertMaterial::EvaluateReflectedEnergy(const Integrator* integrator, const Intersection &isx,
                                                    const glm::vec3 &outgoing_ray, const glm::vec3 &incoming_ray,
-                                                   int d, int inside)
+                                                   int d)
 {
     glm::vec3 bcolor = base_color;
     if (texture != nullptr) bcolor *= GetImageColor(isx.uv, texture);
@@ -19,7 +20,7 @@ glm::vec3 LambertMaterial::EvaluateReflectedEnergy(const Integrator* integrator,
     if (i > 0.f) {
         glm::vec3 ori = isx.point + 0.0001f * isx.normal;
         Ray r = Ray(ori, glm::normalize(glm::reflect(-outgoing_ray, isx.normal)));
-        ref = bcolor * integrator->TraceRay(r, d - 1, inside);
+        ref = bcolor * integrator->TraceRay(r, d - 1);
     }
     return glm::clamp(glm::mix(lambert, ref, i), glm::vec3(0.f), glm::vec3(1.f));
 }

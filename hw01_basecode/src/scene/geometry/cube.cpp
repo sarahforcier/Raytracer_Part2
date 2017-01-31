@@ -9,13 +9,13 @@ glm::vec2 Cube::GetUVCoordinates(const glm::vec3 &point) const {
     float x = fabs(point.x); float y = fabs(point.y); float z = fabs(point.z);
     // YZ
     if (x > y && x > z) {
-       return glm::vec2(point.y + 0.5, point.z + 0.5);
+       return glm::vec2((point.y + 0.5f)/2.f, (point.z + 0.5f)/2.f + 0.5f);
     // XZ
     } else if (y > z) {
-        return glm::vec2(point.x + 0.5, point.z + 0.5);
+        return glm::vec2((point.x + 0.5f)/2.f, (point.z + 0.5f)/2.f);
     // XY
     } else {
-        return glm::vec2(point.x + 0.5, point.y + 0.5);
+        return glm::vec2((point.x + 0.5f)/2.f+0.5f, (point.y + 0.5f)/2.f);
     }
 }
 
@@ -47,7 +47,9 @@ Intersection Cube::GetIntersection(Ray r)
         if (x > y && x > z) n[0] = p[0]/0.5f;
         else if (y > z) n[1] = p[1]/0.5f;
         else n[2] = p[2]/0.5f;
-        inter.normal = glm::normalize((glm::vec3(transform.invTransT() * n)));
+        // normal map
+        if (material->normal_map != nullptr) n = glm::vec4(material->GetImageColor(inter.uv, material->normal_map), 0.f);
+        inter.normal = glm::normalize(glm::vec3(transform.invTransT() * n));
         inter.t = tnear;
         inter.object_hit = this;
     }

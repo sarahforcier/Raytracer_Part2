@@ -221,10 +221,10 @@ void MyGL::RaytraceScene()
 //        }
 //    }
 
-      for (unsigned int i = 286; i < scene.camera.width; i++) {
-          for (unsigned int j = 217; j < scene.camera.height; j++) {
+      for (unsigned int i = 0; i < scene.camera.width; i++) {
+          for (unsigned int j = 0; j < scene.camera.height; j++) {
               Ray r = scene.camera.Raycast(i, j);
-              scene.film.pixels[i][j] = glm::clamp(integrator.TraceRay(r, 5, 1), glm::vec3(0.f), glm::vec3(1.f));
+              scene.film.pixels[i][j] = glm::clamp(integrator.TraceRay(r, 5), glm::vec3(0.f), glm::vec3(1.f));
           }
       }
       scene.film.WriteImage(filepath);

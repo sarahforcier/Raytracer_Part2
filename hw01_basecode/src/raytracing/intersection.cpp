@@ -42,7 +42,7 @@ QList<Intersection> IntersectionEngine::GetAllIntersections(Ray r) {
         if (inter.t > 0) {
             list.append(inter);
         }
-        qSort(list.begin(), list.end(), lessThan)
+        qSort(list.begin(), list.end(), lessThan);
     }
     return list;
 }

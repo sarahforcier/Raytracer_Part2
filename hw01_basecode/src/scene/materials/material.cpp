@@ -11,7 +11,8 @@ Material::Material(const glm::vec3 &color):
     reflectivity(0),
     refract_idx_in(0),
     refract_idx_out(0),
-    texture(nullptr)
+    texture(nullptr),
+    normal_map(nullptr)
 {
 }
 

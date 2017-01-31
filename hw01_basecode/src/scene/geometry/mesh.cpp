@@ -74,8 +74,10 @@ Intersection Triangle::GetIntersection(Ray r)
         inter.object_hit = this;
         inter.t = t;
         inter.point = p;
-        inter.normal = glm::normalize(plane_normal);
         inter.uv = GetUVCoordinates(p);
+        // normal map
+        if (material->normal_map != nullptr) inter.normal = glm::normalize(material->GetImageColor(inter.uv, material->normal_map));
+        else inter.normal = glm::normalize(plane_normal);
     }
     return inter;
 }

@@ -12,7 +12,7 @@ PhongMaterial::PhongMaterial(const glm::vec3 &color):
 // outgoing = view
 glm::vec3 PhongMaterial::EvaluateReflectedEnergy(const Integrator* integrator, const Intersection &isx,
                                                  const glm::vec3 &outgoing_ray, const glm::vec3 &incoming_ray,
-                                                 int d, int inside)
+                                                 int d)
 {
     glm::vec3 bcolor = base_color;
     if (texture != nullptr) bcolor *= GetImageColor(isx.uv, texture);
@@ -25,7 +25,7 @@ glm::vec3 PhongMaterial::EvaluateReflectedEnergy(const Integrator* integrator, c
     if (i > 0.f) {
         glm::vec3 ori = isx.point + 0.0001f * isx.normal;
         Ray r = Ray(ori,glm::normalize(glm::reflect(-outgoing_ray, isx.normal)));
-        ref = bcolor * integrator->TraceRay(r, d - 1, inside);
+        ref = bcolor * integrator->TraceRay(r, d - 1);
     }
     glm::vec3 h = glm::mix(phong, ref, i);
     return glm::clamp(h, glm::vec3(0.f), glm::vec3(1.f));

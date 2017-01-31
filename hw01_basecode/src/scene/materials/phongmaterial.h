@@ -12,7 +12,7 @@ public:
     // The incoming ray is the direction from which light is being received by the point of intersection.
     virtual glm::vec3 EvaluateReflectedEnergy(const Integrator* integrator, const Intersection &isx,
                                               const glm::vec3 &outgoing_ray, const glm::vec3 &incoming_ray,
-                                              int d, int inside);
+                                              int d);
 
     float specular_power;
 };

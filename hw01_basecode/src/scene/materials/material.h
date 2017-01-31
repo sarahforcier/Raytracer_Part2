@@ -20,7 +20,7 @@ public:
     // The incoming ray is the direction from which light is being received by the point of intersection.
     virtual glm::vec3 EvaluateReflectedEnergy(const Integrator* integrator, const Intersection &isx,
                                               const glm::vec3 &outgoing_ray, const glm::vec3 &incoming_ray,
-                                              int d, int inside) = 0;
+                                              int d) = 0;
 
     //Returns the RGB color stored in the input image as a vec3 with values ranging from 0 to 1.
     //Note that this is a STATIC function, so you don't need to call it from an instance of Material
