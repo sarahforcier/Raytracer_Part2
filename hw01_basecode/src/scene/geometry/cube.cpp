@@ -48,7 +48,7 @@ Intersection Cube::GetIntersection(Ray r)
         else if (y > z) n[1] = p[1]/0.5f;
         else n[2] = p[2]/0.5f;
         // normal map
-        if (material->normal_map != nullptr) n = glm::vec4(material->GetImageColor(inter.uv, material->normal_map), 0.f);
+        //if (material->normal_map != nullptr) n = glm::vec4(material->GetImageColor(inter.uv, material->normal_map), 0.f);
         inter.normal = glm::normalize(glm::vec3(transform.invTransT() * n));
         inter.t = tnear;
         inter.object_hit = this;

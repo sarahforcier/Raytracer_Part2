@@ -13,7 +13,7 @@ glm::vec3 LambertMaterial::EvaluateReflectedEnergy(const Integrator* integrator,
 {
     glm::vec3 bcolor = base_color;
     if (texture != nullptr) bcolor *= GetImageColor(isx.uv, texture);
-    glm::vec3 lambert = glm::dot(isx.normal, incoming_ray) * bcolor;
+    glm::vec3 lambert = glm::clamp(glm::dot(isx.normal, incoming_ray) * bcolor, glm::vec3(0.f), glm::vec3(1.f));
     glm::vec3 ref = glm::vec3(0.f);
     float i = reflectivity;
     if (d < 0) i = 0.f;

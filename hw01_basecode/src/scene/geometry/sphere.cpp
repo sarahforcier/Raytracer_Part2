@@ -31,7 +31,7 @@ Intersection Sphere::GetIntersection(Ray r)
         glm::vec3 N = tr.origin + t * tr.direction;
         inter.uv = GetUVCoordinates(N);
         // normal map
-        if (material->normal_map != nullptr) N = material->GetImageColor(inter.uv, material->normal_map);
+        //if (material->normal_map != nullptr) N = material->GetImageColor(inter.uv, material->normal_map);
         inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
         inter.t = t;
         inter.object_hit = this;
