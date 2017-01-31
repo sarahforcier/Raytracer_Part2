@@ -30,6 +30,10 @@ Intersection IntersectionEngine::GetIntersection(Ray r)
     return inter;
 }
 
+bool lessThan(Intersection i1, Intersection i2) {
+    return i1.t < i2.t;
+}
+
 QList<Intersection> IntersectionEngine::GetAllIntersections(Ray r) {
     QList<Intersection> list = QList<Intersection>();
     for (auto obj : scene->objects) {
@@ -38,6 +42,7 @@ QList<Intersection> IntersectionEngine::GetAllIntersections(Ray r) {
         if (inter.t > 0) {
             list.append(inter);
         }
+        qSort(list.begin(), list.end(), lessThan)
     }
     return list;
 }

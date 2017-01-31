@@ -221,11 +221,12 @@ void MyGL::RaytraceScene()
 //        }
 //    }
 
-      for (unsigned int i = 58; i < scene.camera.width; i++) {
-          for (unsigned int j = 136; j < scene.camera.height; j++) {
+      for (unsigned int i = 286; i < scene.camera.width; i++) {
+          for (unsigned int j = 217; j < scene.camera.height; j++) {
               Ray r = scene.camera.Raycast(i, j);
-              scene.film.pixels[i][j] = integrator.TraceRay(r, 5, 1);
+              scene.film.pixels[i][j] = glm::clamp(integrator.TraceRay(r, 5, 1), glm::vec3(0.f), glm::vec3(1.f));
           }
       }
+      scene.film.WriteImage(filepath);
 //    if (QThreadPool::globalInstance()->waitForDone()) scene.film.WriteImage(filepath);
 }
