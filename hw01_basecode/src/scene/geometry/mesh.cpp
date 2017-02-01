@@ -75,9 +75,17 @@ Intersection Triangle::GetIntersection(Ray r)
         inter.t = t;
         inter.point = p;
         inter.uv = GetUVCoordinates(p);
-        // normal map
-        //if (material->normal_map != nullptr) inter.normal = glm::normalize(material->GetImageColor(inter.uv, material->normal_map));
         inter.normal = glm::normalize(plane_normal);
+        // normal map
+        if (material->normal_map != nullptr) {
+            glm::vec2 u1 = uvs[0]; glm::vec2 u2 = uvs[1]; glm::vec2 u3 = uvs[2];
+            glm::vec3 dp1 = p2 - p1; glm::vec3 dp2 = p3 - p1;
+            glm::vec2 du1 = u2 - u1; glm::vec2 du2 = u3 - u1;
+            glm::vec3 T = (dp1 * du2.y - dp2 * du1.y) / (du1.x * du2.y - du1.y * du2.x);
+            glm::vec3 B = (dp2 * du1.x - dp1 * du2.x) / (du1.x * du2.y - du1.y * du2.x);
+            glm::vec3 we = 2.f* material->GetImageColor(inter.uv, material->normal_map) - 1.f;
+            inter.normal = glm::normalize(we.x*T + we.y*B + we.z*inter.normal);
+        }
     }
     return inter;
 }

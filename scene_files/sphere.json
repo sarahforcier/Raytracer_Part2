@@ -11,8 +11,70 @@
     "geometry": [
       {
         "type": "sphere",
-        "name": "Sphere",
-        "material": "white_diffuse"
+        "name": "Reflective Sphere Blue1",
+        "transform": {
+          "translate": [-3, 3.5, -3],
+          "scale": [3, 3, 3]
+          },
+        "material": "mirrored_specular2"
+      },
+      {
+        "type": "square",
+        "name": "Back Wall",
+        "transform": {
+          "translate": [0, 0, -5],
+          "scale": [10, 10, 1]
+        },
+        "material": "env_box1"
+      },
+      {
+        "type": "square",
+        "name": "Right Wall",
+        "transform": {
+          "translate": [5, 0, 0],
+          "rotate": [0, -90, 0],
+          "scale": [10, 10, 1]
+        },
+        "material": "env_box2"
+      },
+      {
+        "type": "square",
+        "name": "Left Wall",
+        "transform": {
+          "translate": [-5, 0, 0],
+          "rotate": [0, 90, 0],
+          "scale": [10, 10, 1]
+        },
+        "material": "env_box3"
+      },
+      {
+        "type": "square",
+        "name": "Ceiling",
+        "transform": {
+          "translate": [0, 5, 0],
+          "rotate": [90, 0, 0],
+          "scale": [10, 10, 1]
+        },
+        "material": "env_box4"
+      },
+      {
+        "type": "square",
+        "name": "Floor",
+        "transform": {
+          "translate": [0, -5, 0],
+          "rotate": [-90, 0, 0],
+          "scale": [10, 10, 1]
+        },
+        "material": "env_box5"
+      },
+      {
+        "type": "square",
+        "name": "Front Wall",
+        "transform": {
+          "translate": [0, 0, 5],
+          "scale": [10, 10, -1]
+        },
+        "material": "env_box6"
       },
       {
         "type": "sphere",
@@ -26,9 +88,55 @@
     ],
     "material": [
       {
-        "type": "lambert",
-        "name": "white_diffuse",
-        "baseColor": [1, 1, 1]
+        "type": "sphere",
+        "name": "Reflective Sphere Blue1",
+        "transform": {
+          "translate": [0,0,0],
+          "scale": [1,1,1]
+          },
+        "material": "mirrored_specular2"
+      },
+      {
+        "type": "env_box1",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/nz.jpg",
+        "emissive": "true"
+      },
+      {
+        "type": "env_box2",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/nx.jpg",
+        "emissive": "true"
+      },
+      {
+        "type": "env_box3",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/px.jpg",
+        "emissive": "true"
+      },
+      {
+        "type": "env_box4",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/py.jpg",
+        "emissive": "true"
+      },
+      {
+        "type": "env_box5",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/ny.jpg",
+        "emissive": "true"
+      },
+      {
+        "type": "env_box6",
+        "name": "textured_diffuse",
+        "baseColor": [1, 1, 1],
+        "texture": "skymap/pz.jpg",
+        "emissive": "true"
       },
       {
         "type": "lambert",

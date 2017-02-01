@@ -7,13 +7,13 @@ static const int CUB_VERT_COUNT = 24;
 
 glm::vec2 Cube::GetUVCoordinates(const glm::vec3 &point) const {
     float x = fabs(point.x); float y = fabs(point.y); float z = fabs(point.z);
-    // YZ
+    // X
     if (x > y && x > z) {
        return glm::vec2((point.y + 0.5f)/2.f, (point.z + 0.5f)/2.f + 0.5f);
-    // XZ
+    // Y
     } else if (y > z) {
         return glm::vec2((point.x + 0.5f)/2.f, (point.z + 0.5f)/2.f);
-    // XY
+    // Z
     } else {
         return glm::vec2((point.x + 0.5f)/2.f+0.5f, (point.y + 0.5f)/2.f);
     }
@@ -40,16 +40,27 @@ Intersection Cube::GetIntersection(Ray r)
     }
     if (tnear > 0.f && tnear <= tfar) {
         inter.point = r.origin + tnear * r.direction;
-        glm::vec4 n = glm::vec4(0.f);
+        glm::vec3 n = glm::vec3(0.f);
+        glm::vec3 t = glm::vec3(0.f);
         glm::vec3 p = tr.origin + tnear * tr.direction;
         inter.uv = GetUVCoordinates(p);
         float x = fabs(p[0]); float y = fabs(p[1]); float z = fabs(p[2]);
-        if (x > y && x > z) n[0] = p[0]/0.5f;
-        else if (y > z) n[1] = p[1]/0.5f;
-        else n[2] = p[2]/0.5f;
+        if (x > y && x > z) {
+            n[0] = p[0]/0.5f; t[1] = n[0];
+
+        } else if (y > z) {
+            n[1] = p[1]/0.5f; t[2] = n[1];
+        }
+        else {
+            n[2] = p[2]/0.5f; t[0] = n[2];
+        }
         // normal map
-        //if (material->normal_map != nullptr) n = glm::vec4(material->GetImageColor(inter.uv, material->normal_map), 0.f);
-        inter.normal = glm::normalize(glm::vec3(transform.invTransT() * n));
+        if (material->normal_map != nullptr) {
+            glm::vec3 b = glm::cross(n, t);
+            glm::vec3 we = 2.f* material->GetImageColor(inter.uv, material->normal_map) - 1.f;
+            n = glm::normalize(we.x*t + we.y*b + we.z*n);
+        }
+        inter.normal = glm::normalize(glm::vec3(transform.invTransT() * glm::vec4(n, 0.f)));
         inter.t = tnear;
         inter.object_hit = this;
     }

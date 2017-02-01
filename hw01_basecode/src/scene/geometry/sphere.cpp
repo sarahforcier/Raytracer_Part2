@@ -9,8 +9,11 @@ static const int SPH_VERT_COUNT = 382;
 
 glm::vec2 Sphere::GetUVCoordinates(const glm::vec3 &point) const {
     glm::vec3 n = glm::normalize(point);
-    float u = atan2(n.x, n.z) / (2 * PI) + 0.5;
-    float v = n.y * 0.5 + 0.5;
+    float ph = atan2f(n.z, n.x);
+    if (ph < 0.f) ph += 2*PI;
+    float th = acosf(n.y);
+    float u = 1 - ph / 2/ PI;
+    float v = 1 - th / PI;
     return glm::vec2(u, v);
 }
 
@@ -30,20 +33,20 @@ Intersection Sphere::GetIntersection(Ray r)
         inter.point = r.origin + t * r.direction;
         glm::vec3 N = tr.origin + t * tr.direction;
         inter.uv = GetUVCoordinates(N);
-        //normal map
-//        if (material->normal_map != nullptr) {
-//            glm::vec3 up = glm::vec3(0,1,0);
-//            if (N == up) up = glm::vec3(0,1,1);
-//            glm::vec3 t = glm::cross(up, N);
-//            glm::vec3 B = glm::normalize(glm::cross(N,t));
-//            glm::vec3 T = glm::normalize(glm::cross(B,N));
-//            if (glm::dot(glm::cross(N,T), B) < 0.f) T = -T;
-//            glm::vec3 we = material->GetImageColor(inter.uv, material->normal_map);
-//            N = glm::normalize(we.x*T + we.y*B + we.z*N);
-//        }
-        inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
         inter.t = t;
         inter.object_hit = this;
+        //normal map
+        if (material->normal_map != nullptr) {
+            glm::vec3 up = glm::vec3(0,1,0);
+            if (N == up) up = glm::vec3(0,1,1);
+            glm::vec3 t = glm::cross(up, N);
+            glm::vec3 B = glm::normalize(glm::cross(N,t));
+            glm::vec3 T = glm::normalize(glm::cross(B,N));
+            if (glm::dot(glm::cross(N,T), B) < 0.f) T = -T;
+            glm::vec3 we = 2.f* material->GetImageColor(inter.uv, material->normal_map) - 1.f;
+            N = glm::normalize(we.x*T + we.y*B + we.z*N);
+        }
+        inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
     }
     return inter;
 }

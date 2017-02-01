@@ -1,7 +1,7 @@
 #include <scene/geometry/square.h>
 
 glm::vec2 SquarePlane::GetUVCoordinates(const glm::vec3 &point) const {
-    return glm::vec2(point.x + 0.5, point.y + 0.5);
+    return glm::vec2(point.x + 0.5f, point.y + 0.5f);
 }
 
 Intersection SquarePlane::GetIntersection(Ray r)
@@ -14,12 +14,18 @@ Intersection SquarePlane::GetIntersection(Ray r)
     glm::vec3 tp = tr.origin + t * tr.direction;
     if (tp.r > -0.5 && tp.r < 0.5 && tp.g > -0.5 && tp.g < 0.5) {
         inter.point = r.origin + t * r.direction;
-        // normal map
-        //if (material->normal_map != nullptr) N = material->GetImageColor(inter.uv, material->normal_map);
-        inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
         inter.t = t;
         inter.object_hit = this;
         inter.uv = GetUVCoordinates(tp);
+        // normal map
+        if (material->normal_map != nullptr) {
+            glm::vec3 B = glm::vec3(0,1,0);
+            glm::vec3 T = glm::vec3(1,0,0);
+            glm::vec3 we = 2.f* material->GetImageColor(inter.uv, material->normal_map) - 1.f;
+            N = glm::normalize(we.x*T + we.y*B + we.z*N);
+        }
+        inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
+
     }
     return inter;
 }

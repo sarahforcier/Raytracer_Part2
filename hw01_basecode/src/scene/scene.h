@@ -16,6 +16,7 @@ public:
     QList<Geometry*> lights;
     Camera camera;
     Film film;
+    QImage* env_box;
 
     void SetCamera(const Camera &c);
 
