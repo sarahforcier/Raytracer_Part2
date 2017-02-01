@@ -30,13 +30,16 @@ Intersection Sphere::GetIntersection(Ray r)
         inter.point = r.origin + t * r.direction;
         glm::vec3 N = tr.origin + t * tr.direction;
         inter.uv = GetUVCoordinates(N);
-        // normal map
+        //normal map
 //        if (material->normal_map != nullptr) {
-//            glm::vec3 t = glm::cross(N, glm::vec3(1,0,0));
-//            glm::vec3 B = glm::cross(N, t);
-//            glm::vec3 T = glm::cross(N,B);
+//            glm::vec3 up = glm::vec3(0,1,0);
+//            if (N == up) up = glm::vec3(0,1,1);
+//            glm::vec3 t = glm::cross(up, N);
+//            glm::vec3 B = glm::normalize(glm::cross(N,t));
+//            glm::vec3 T = glm::normalize(glm::cross(B,N));
+//            if (glm::dot(glm::cross(N,T), B) < 0.f) T = -T;
 //            glm::vec3 we = material->GetImageColor(inter.uv, material->normal_map);
-//            N = we.x*T + we.y*B + we.z*N;
+//            N = glm::normalize(we.x*T + we.y*B + we.z*N);
 //        }
         inter.normal = glm::normalize((glm::vec3(transform.invTransT() * glm::vec4(N,0.f))));
         inter.t = t;

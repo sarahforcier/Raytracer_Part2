@@ -7,7 +7,7 @@ Integrator::Integrator(): max_depth(5), scene(nullptr), intersection_engine(null
 //Basic ray trace
 glm::vec3 Integrator::TraceRay(Ray r, int depth) const
 {
-    glm::vec3 color;
+    glm::vec3 color = glm::vec3(0.f);
     Intersection inter = intersection_engine->GetIntersection(r);
     if (inter.t > 0.f && depth > 0.f) {
         // hit a light, return light color
@@ -52,31 +52,31 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
         } else { // non-refractive object
             int num = 0;
             for (auto light : scene->lights) {
+                glm::vec3 clight = glm::vec3(1.f);
                 glm::vec3 o = inter.point + 0.0001f * inter.normal;
                 glm::vec3 d = glm::normalize(light->transform.position() - o);
                 Ray light_r = Ray(o,d); // shadow feeler ray
                 QList<Intersection> shad_feels = intersection_engine->GetAllIntersections(light_r);
-                color = glm::vec3(1.f);
                 for (auto shad : shad_feels) {
                     // no shadow
                     if (shad.t < 0.f || shad.object_hit->material->emissive) {
-                        color *= light->material->base_color * inter.object_hit->material->
+                        clight *= light->material->base_color * inter.object_hit->material->
                                 EvaluateReflectedEnergy(this, inter, -glm::normalize(r.direction), d, depth);
                         num++;
                         break;
                     }
                     // shadowed
                     if (shad.object_hit->material->refract_idx_in == 0.f) {
-                        color = glm::vec3(0.f);
+                        clight = glm::vec3(0.f);
                         break;
                     }
-                    // emissive object
+                    // transmissive object
                     glm::vec3 trans = shad.object_hit->material->base_color;
                     if (shad.object_hit->material->texture != nullptr) trans *= Material::GetImageColor(shad.uv, shad.object_hit->material->texture);
                     num++;
-                    color *= trans;
+                    clight *= trans;
                 }
-
+                color += clight;
             }
             color = color / float(scene->lights.length());
         }
