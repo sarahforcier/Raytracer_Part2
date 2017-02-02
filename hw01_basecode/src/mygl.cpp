@@ -206,27 +206,27 @@ void MyGL::RaytraceScene()
     {
         return;
     }
-//    unsigned int w = scene.camera.width; unsigned int h = scene.camera.height;
-//    bool done = false;
-//    for(unsigned int i = 0; i < w; i = i + 16)
-//    {
-//        for(unsigned int j = 0; j < scene.camera.height; j = j + 16)
-//        {
-//            //TODO
-//            glm::ivec2 min = glm::ivec2(i, j);
-//            glm::ivec2 max = glm::ivec2(glm::min(i + 15, w - 1), glm::min(j + 15, h - 1));
-//            RenderTask* task = new RenderTask(min, max, &scene.camera, &scene.film, &integrator);
+    unsigned int w = scene.camera.width; unsigned int h = scene.camera.height;
+    bool done = false;
+    for(unsigned int i = 0; i < w; i = i + 16)
+    {
+        for(unsigned int j = 0; j < h; j = j + 16)
+        {
+            //TODO
+            glm::ivec2 min = glm::ivec2(i, j);
+            glm::ivec2 max = glm::ivec2(glm::min(i + 15, w - 1), glm::min(j + 15, h - 1));
+            RenderTask* task = new RenderTask(min, max, &scene.camera, &scene.film, &integrator);
 
-//            QThreadPool::globalInstance()->start(task);
-//        }
-//    }
+            QThreadPool::globalInstance()->start(task);
+        }
+    }
 
-      for (unsigned int i = 0; i < scene.camera.width; i++) {
-          for (unsigned int j = 0; j < scene.camera.height; j++) {
-              Ray r = scene.camera.Raycast(i, j);
-              scene.film.pixels[i][j] = glm::clamp(integrator.TraceRay(r, 5), glm::vec3(0.f), glm::vec3(1.f));
-          }
-      }
-      scene.film.WriteImage(filepath);
-//    if (QThreadPool::globalInstance()->waitForDone()) scene.film.WriteImage(filepath);
+//      for (unsigned int i = 196; i < scene.camera.width; i++) {
+//          for (unsigned int j = 97; j < scene.camera.height; j++) {
+//              Ray r = scene.camera.Raycast(i, j);
+//              scene.film.pixels[i][j] = glm::clamp(integrator.TraceRay(r, 5), glm::vec3(0.f), glm::vec3(1.f));
+//          }
+//      }
+//      scene.film.WriteImage(filepath);
+    if (QThreadPool::globalInstance()->waitForDone()) scene.film.WriteImage(filepath);
 }

@@ -38,7 +38,7 @@ Intersection Sphere::GetIntersection(Ray r)
         //normal map
         if (material->normal_map != nullptr) {
             glm::vec3 up = glm::vec3(0,1,0);
-            if (N == up) up = glm::vec3(0,1,1);
+            //if (N == up) up = glm::vec3(0,1,1);
             glm::vec3 t = glm::cross(up, N);
             glm::vec3 B = glm::normalize(glm::cross(N,t));
             glm::vec3 T = glm::normalize(glm::cross(B,N));

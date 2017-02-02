@@ -10,13 +10,14 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
     glm::vec3 color = glm::vec3(0.f);
     Intersection inter = intersection_engine->GetIntersection(r);
 
-    // environment light
-    if (inter.t < 0.f && depth > 0.f) {
-
-    }
-    else if (inter.t > 0.f && depth > 0.f) {
+    if (inter.t > 0.f && depth > 0.f) {
         // hit a light, return light color
-        if (inter.object_hit->material->emissive) return inter.object_hit->material->base_color;
+        if (inter.object_hit->material->emissive) {
+            glm::vec3 l = inter.object_hit->material->base_color;
+            if (inter.object_hit->material->texture != nullptr)
+                l *= inter.object_hit->material->GetImageColor(inter.uv, inter.object_hit->material->texture);
+            return l;
+        }
         // get base color (with or without texture)
         glm::vec3 bcolor = inter.object_hit->material->base_color;
         if (inter.object_hit->material->texture != nullptr) {
@@ -60,29 +61,32 @@ glm::vec3 Integrator::TraceRay(Ray r, int depth) const
                 glm::vec3 clight = light->material->base_color;
                 glm::vec3 o = inter.point + 0.0001f * inter.normal;
                 glm::vec3 d = glm::normalize(light->transform.position() - o);
-                Ray light_r = Ray(o,d); // shadow feeler ray
-                QList<Intersection> shad_feels = intersection_engine->GetAllIntersections(light_r);
-                for (auto shad : shad_feels) {
-                    // no shadow
-                    if (shad.t < 0.f || shad.object_hit->material->emissive) {
-                        clight *= inter.object_hit->material->
-                                EvaluateReflectedEnergy(this, inter, -glm::normalize(r.direction), d, depth);
-                        break;
+                // dont draw shadow feeling through light on other side
+                if (glm::dot(d, inter.normal) > 0.f) {
+                    Ray light_r = Ray(o,d); // shadow feeler ray
+                    QList<Intersection> shad_feels = intersection_engine->GetAllIntersections(light_r);
+                    for (auto shad : shad_feels) {
+                        // no shadow
+                        if (shad.t < 0.f || shad.object_hit->material->emissive) {
+                            clight *= inter.object_hit->material->
+                                    EvaluateReflectedEnergy(this, inter, -glm::normalize(r.direction), d, depth);
+                            break;
+                        }
+                        // shadowed
+                        if (shad.object_hit->material->refract_idx_in == 0.f) {
+                            clight = glm::vec3(0.f);
+                            break;
+                        }
+                        // transmissive object
+                        glm::vec3 trans = shad.object_hit->material->base_color;
+                        if (shad.object_hit->material->texture != nullptr)
+                            trans *= Material::GetImageColor(shad.uv, shad.object_hit->material->texture);
+                        clight *= trans;
                     }
-                    // shadowed
-                    if (shad.object_hit->material->refract_idx_in == 0.f) {
-                        clight = glm::vec3(0.f);
-                        break;
-                    }
-                    // transmissive object
-                    glm::vec3 trans = shad.object_hit->material->base_color;
-                    if (shad.object_hit->material->texture != nullptr)
-                        trans *= Material::GetImageColor(shad.uv, shad.object_hit->material->texture);
-                    clight *= trans;
+                    color += clight;
                 }
-                color += clight;
+                color = color * bcolor / float(scene->lights.length());
             }
-            color = color * bcolor / float(scene->lights.length());
         }
     }
     return glm::abs(color);

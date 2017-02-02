@@ -20,15 +20,6 @@
       },
       {
         "type": "square",
-        "name": "Back Wall",
-        "transform": {
-          "translate": [0, 0, -10],
-          "scale": [20, 20, 1]
-        },
-        "material": "env_box1"
-      },
-      {
-        "type": "square",
         "name": "Right Wall",
         "transform": {
           "translate": [10, 0, 0],
@@ -56,25 +47,6 @@
           "scale": [20, 20, 1]
         },
         "material": "env_box4"
-      },
-      {
-        "type": "square",
-        "name": "Floor",
-        "transform": {
-          "translate": [0, -10, 0],
-          "rotate": [-90, 0, 0],
-          "scale": [20, 20, 1]
-        },
-        "material": "env_box5"
-      },
-      {
-        "type": "square",
-        "name": "Front Wall",
-        "transform": {
-          "translate": [0, 0, 10],
-          "scale": [20, 20, -1]
-        },
-        "material": "env_box6"
       }
     ],
     "material": [
@@ -90,42 +62,36 @@
         "type": "lambert",
         "name": "env_box1",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/nz.jpg",
         "emissive": "true"
       },
       {
         "type": "lambert",
         "name": "env_box2",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/nx.jpg",
         "emissive": "true"
       },
       {
         "type": "lambert",
         "name": "env_box3",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/px.jpg",
         "emissive": "true"
       },
       {
         "type": "lambert",
         "name": "env_box4",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/py.jpg",
         "emissive": "true"
       },
       {
         "type": "lambert",
         "name": "env_box5",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/ny.jpg",
         "emissive": "true"
       },
       {
         "type": "lambert",
         "name": "env_box6",
         "baseColor": [1, 1, 1],
-        "texture": "skymap/pz.jpg",
         "emissive": "true"
       }
     ],
